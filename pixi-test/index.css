@@ -1,0 +1,56 @@
+body {
+    background-color: black;
+}
+
+#keys {
+    color: white;
+}
+
+#output {
+    color: white;
+}
+
+.hidden {
+    opacity: 0;
+    display: none;
+}
+
+/* Progress Bar */
+ 
+div.progress {
+    width: 600px;
+    height: 200px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgoldenrod;
+    transform: translate(calc(400px - 50%), calc(300px - 50%));
+    border-radius: 20px;
+    padding: 0 20px;
+}
+
+div.progress>p.message {
+    color: white;
+    position: absolute;
+    margin-top: -15%;
+}
+
+div.progress-bar {
+    width: 90%;
+    height: 30%;
+    border-radius: 20px;
+    background-color: darkgreen;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div.progress-bar>p.percentage {
+    color: white;
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+}
