@@ -157,6 +157,8 @@ function gameLoop(delta) {
     for (let i = 0; i < bullets.length; i++) {
         if (detectCollision(bullets[i], red)) {
             console.log('collision');
+            app.stage.removeChild(red)
+            // red.destroy()
             killSound.play();
         }
     }
