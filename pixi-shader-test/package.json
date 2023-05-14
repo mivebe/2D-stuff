@@ -1,7 +1,7 @@
 {
-  "name": "pixi-top-down-shooter",
+  "name": "pixi-shader-test",
   "version": "1.0.0",
-  "description": "Top down shooter game in Pixi.js",
+  "description": "Project for testing GLSL fragment shaders applied as filters of sprite images with PIXI.js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,9 +23,13 @@
   },
   "keywords": [
     "pixi",
-    "shooter",
-    "top-down",
-    "shooter"
+    "PIXI.js",
+    "GLSL",
+    "shader",
+    "shaders",
+    "fragment shader",
+    "webpack",
+    "webpack-copy-plugin"
   ],
   "author": "mivebe",
   "license": "MIT"

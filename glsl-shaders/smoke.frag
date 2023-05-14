@@ -1,4 +1,7 @@
+#ifdef GL_ES
 precision mediump float;
+#endif
+
 uniform vec2 u_resolution;
 uniform float u_time;
 // uniform vec2 resolution;
@@ -41,7 +44,7 @@ void main() {
   // Defines how many are the clusters of smoke in the display area.
   float clusters = 8.0;
   float density = 1.0;
-
+  
   // A bunch of colors for pixel shifting
   const vec3 c1 = vec3(126.0 / 255.0, 0.0 / 255.0, 97.0 / 255.0);
   const vec3 c2 = vec3(173.0 / 255.0, 0.0 / 255.0, 161.4 / 255.0);
@@ -52,7 +55,7 @@ void main() {
   
   // This is how "packed" the smoke is in the display area.
   vec2 pixel = gl_FragCoord.xy * clusters / u_resolution.xx;
-
+  
   // The fbm function takes pixel as its seed (so each pixel looks different) and time (so it shifts over time)
   float q = fbm(pixel - u_time * 0.1);
   vec2 r = vec2(fbm(pixel + q + u_time * speed.x - pixel.x - pixel.y), fbm(pixel + q - u_time * speed.y));

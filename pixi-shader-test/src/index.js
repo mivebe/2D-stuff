@@ -1,4 +1,5 @@
-import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js';
+import '../styles/index.css';
 
 class App {
     async init() {
@@ -20,6 +21,8 @@ class App {
             alpha: 1.0,
             speed: [0.7, 0.4],
             shift: 1.6,
+            clusters: 8.0,
+            density: 1.0,
         }
 
         const shaderCode = document.getElementById('fragShader').innerHTML

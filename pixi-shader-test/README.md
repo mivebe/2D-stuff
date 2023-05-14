@@ -1,4 +1,4 @@
-# Pixi Topdown Shooter
+# Pixi Shader Tests
 
 ### Install
 ```javascript

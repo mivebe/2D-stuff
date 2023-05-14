@@ -32,7 +32,8 @@ module.exports = {
         new HtmlWebpackPlugin({ template: './index.html' }),
         new CopyPlugin({
             patterns: [
-                { from: './assets/', to: 'assets/' }
+                { from: './assets/', to: 'assets/' },
+                { from: './assets/images/favicon.ico', to: './assets/images/favicon.ico' },
             ]
         })
     ]
