@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import '../styles/index.css';
-import shaderCode from './shaders/smoke.frag';
+import smokeCode from './shaders/smoke.frag';
+import lightCode from './shaders/light.frag';
 
 class App {
   async init() {
@@ -10,13 +11,16 @@ class App {
       resizeTo: window,
       view: canvas,
       antialias: true,
-      background: '#1099bb'
+      background: '#1099bb',
+      backgroundAlpha: 0.2,
     })
 
     const { stage, renderer } = app;
     const { innerWidth: width, innerHeight: height } = window;
 
-    const uniforms = {
+    window.addEventListener('pointermove', e => lightUniforms.mouse = [e.x, e.y])
+
+    const smokeUniforms = {
       res: [width, height],
       time: 0.0,
       alpha: 1.0,
@@ -26,13 +30,23 @@ class App {
       density: 1.0,
     }
 
-    const smokeShader = new PIXI.Filter('', shaderCode, uniforms);
+    const lightUniforms = {
+      res: [width, height],
+      mouse: [0.0, 0.0],
+      time: 0.0,
+    }
+
+    const colorMatrix = new PIXI.filters.ColorMatrixFilter();
+    const smokeShader = new PIXI.Filter('', smokeCode, smokeUniforms);
+    const lightShader = new PIXI.Filter('', lightCode, lightUniforms);
     smokeShader.autoFit = false;
+    lightShader.autoFit = false;
 
     const bg = PIXI.Sprite.from('../assets/images/background.jpg');
     bg.width = width;
     bg.height = height;
-    bg.filters = [smokeShader];
+    bg.filters = [colorMatrix, lightShader];
+    colorMatrix.contrast(2);
     stage.addChild(bg);
 
     const logo = PIXI.Sprite.from('../assets/images/orichalcos.png');
@@ -46,6 +60,7 @@ class App {
 
     function tick() {
       smokeShader.uniforms.time = delta;
+      lightShader.uniforms.time = delta;
       delta += 0.01;
 
       renderer.render(stage);
