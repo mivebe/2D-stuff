@@ -1,3 +1,4 @@
+#version 300 es
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -9,6 +10,7 @@ uniform float u_time;
 // uniform float alpha;
 // uniform float shift;
 // uniform vec2 speed;
+out vec4 outColor;
 
 // RNG based on a number seed.
 float rand(vec2 n) {
@@ -54,13 +56,13 @@ void main() {
   const vec3 c6 = vec3(0.9);
   
   // This is how "packed" the smoke is in the display area.
-  vec2 pixel = gl_FragCoord.xy * clusters / u_resolution.xx;
+  vec2 pixel = gl_FragCoord.xy * clusters / u_resolution.x;
   
   // The fbm function takes pixel as its seed (so each pixel looks different) and time (so it shifts over time)
   float q = fbm(pixel - u_time * 0.1);
   vec2 r = vec2(fbm(pixel + q + u_time * speed.x - pixel.x - pixel.y), fbm(pixel + q - u_time * speed.y));
   vec3 color = mix(c1, c2, fbm(pixel + r)) + mix(c3, c4, r.x) - mix(c5, c6, r.y);
   float gradient = gl_FragCoord.y / u_resolution.y;
-  gl_FragColor = vec4(color * cos(shift * gl_FragCoord.y / u_resolution.y), alpha);
-  gl_FragColor.xyz *= density - gradient;
+  outColor = vec4(color * cos(shift * gl_FragCoord.y / u_resolution.y), alpha);
+  outColor.xyz *= density - gradient;
 }
