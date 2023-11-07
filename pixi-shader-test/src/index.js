@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import '../styles/index.css';
 import smokeCode from './shaders/smoke.frag';
 import lightCode from './shaders/light.frag';
+import snlCode from './shaders/smoke-n-light.frag';
 
 class App {
   async init() {
@@ -18,7 +19,7 @@ class App {
     const { stage, renderer } = app;
     const { innerWidth: width, innerHeight: height } = window;
 
-    window.addEventListener('pointermove', e => lightUniforms.mouse = [e.x, e.y])
+    window.addEventListener('pointermove', e => snlUniforms.mouse = [e.x, e.y])
 
     const smokeUniforms = {
       res: [width, height],
@@ -36,16 +37,30 @@ class App {
       time: 0.0,
     }
 
+    const snlUniforms ={
+      res: [width, height],
+      mouse: [0.0, 0.0],
+      time: 0.0,
+      alpha: 1.0,
+      speed: [0.7, 0.4],
+      shift: 1.6,
+      clusters: 8.0,
+      density: 1.0,
+    }
+
     const colorMatrix = new PIXI.filters.ColorMatrixFilter();
     const smokeShader = new PIXI.Filter('', smokeCode, smokeUniforms);
     const lightShader = new PIXI.Filter('', lightCode, lightUniforms);
+    const snlShader = new PIXI.Filter('', snlCode, snlUniforms);
     smokeShader.autoFit = false;
     lightShader.autoFit = false;
+    snlShader.autoFit = false;
 
     const bg = PIXI.Sprite.from('../assets/images/background.jpg');
     bg.width = width;
     bg.height = height;
-    bg.filters = [colorMatrix, lightShader];
+    // bg.filters = [smokeShader, lightShader,];
+    bg.filters = [snlShader];
     colorMatrix.contrast(2);
     stage.addChild(bg);
 
@@ -61,6 +76,7 @@ class App {
     function tick() {
       smokeShader.uniforms.time = delta;
       lightShader.uniforms.time = delta;
+      snlShader.uniforms.time = delta;
       delta += 0.01;
 
       renderer.render(stage);
