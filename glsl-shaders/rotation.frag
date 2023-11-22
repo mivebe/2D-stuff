@@ -4,6 +4,7 @@ precision mediump float;
 #endif
 
 uniform vec2 u_resolution;
+uniform float u_time;
 out vec4 outColor;
 
 float rectShape(vec2 position, vec2 scale) {
@@ -22,7 +23,7 @@ void main() {
   vec3 color = vec3(0.0);
   
   coord -= vec2(0.5);
-  coord = rotate(0.5) * coord;
+  coord = rotate(0.5 * sin(u_time)) * coord;
   coord += vec2(0.5);
   
   color += vec3(rectShape(coord, vec2(0.3, 0.3)));
