@@ -12,7 +12,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(json|png|gif|mp3)$/i,
+                test: /\.(json|png|gif|ico|mp3)$/i,
                 type: 'asset/resource'
             },
             {
