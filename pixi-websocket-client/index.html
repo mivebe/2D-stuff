@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      http-equiv="X-UA-Compatible"
-      content="IE=edge"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Pixi Websockets Test</title>
-    <link
-      rel="favicon"
-      href="./assets/images/favicon.ico"
-    />
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
 
-  <body>
-    <input placeholder="message" />
-    <ul></ul>
-    <button>SEND</button>
-    <canvas id="main"></canvas>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixi Websockets Test</title>
+  <link rel="favicon" href="./assets/images/favicon.ico" />
+  <style>
+    * {
+      background-color: black;
+      color: white;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="ui-container" style="display: flex; position: absolute; background-color: transparent">
+    <div style="display: flex; flex-direction: column;background-color: transparent">
+      <input placeholder="message" />
+      <button>SEND</button>
+    </div>
+    <ul style="display: flex; flex-direction: column;background-color: transparent"></ul>
+  </div>
+  <canvas id="main"></canvas>
+</body>
+
 </html>

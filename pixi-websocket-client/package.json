@@ -1,7 +1,7 @@
 {
-  "name": "pixi-top-down-shooter",
-  "version": "1.0.0",
-  "description": "Top down shooter game in Pixi.js",
+  "name": "pixi-websocket-client",
+  "version": "0.0.1",
+  "description": "Pixi websocket template",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

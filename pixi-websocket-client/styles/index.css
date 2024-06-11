@@ -1,0 +1,14 @@
+.input-box {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  background-color: transparent;
+}

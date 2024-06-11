@@ -29,7 +29,7 @@ module.exports = {
     },
     mode: 'development',
     plugins: [
-        new HtmlWebpackPlugin({ template: './index.html' }),
+        new HtmlWebpackPlugin({ template: './index.html', favicon: './assets/images/favicon.ico' }),
         new CopyPlugin({
             patterns: [
                 { from: './assets/', to: 'assets/' }

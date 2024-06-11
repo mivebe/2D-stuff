@@ -11,22 +11,28 @@ class App {
       view: canvas,
       antialias: true,
       background: '#1099bb'
-    })
+    });
+    window.app = app;
+    console.log('APP', app);
 
-    console.log('asd');
+    const graphic = new PIXI.Graphics();
+    graphic.beginFill(0x335533);
+    graphic.drawRect(150, 150, 200, 300);
+    app.stage.addChild(graphic)
 
     socket.on('message', text => {
       const el = document.createElement('li');
       el.innerHTML = text;
+      el.style.backgroundColor = 'transparent';
       document.querySelector('ul').appendChild(el);
-    })
+    });
 
     let btn = document.querySelector('button');
     btn.addEventListener('click', () => {
       const text = document.querySelector('input').value;
       console.log(text);
       socket.emit('message', text);
-    })
+    });
   }
 
 }
