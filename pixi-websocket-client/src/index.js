@@ -2,25 +2,35 @@ import * as PIXI from 'pixi.js';
 import { io } from "socket.io-client";
 
 class App {
-  async init() {
-    const canvas = document.getElementById('main');
-    const socket = io('http://localhost:3001/');
+  constructor() {
+    this.canvas = document.getElementById('main');
+    this.socket = io('http://localhost:3001/'); // TODO env
 
-    const app = new PIXI.Application({
-      resizeTo: window,
-      view: canvas,
-      antialias: true,
-      background: '#1099bb'
-    });
-    window.app = app;
+    this.app = new PIXI.Application();
+    this.stage = this.app.stage;
+
+    window.PIXI = PIXI;
+    window.app = this.app;
     console.log('APP', app);
+  }
 
-    const graphic = new PIXI.Graphics();
-    graphic.beginFill(0x335533);
-    graphic.drawRect(150, 150, 200, 300);
-    app.stage.addChild(graphic)
+  async init() {
+    const initOptions = {
+      resizeTo: window,
+      canvas: this.canvas,
+      antialias: true,
+      background: '#3D105C'
+    };
 
-    socket.on('message', text => {
+    this.app.init(initOptions);
+
+    this.attachListeners();
+    this.loadAssets();
+    this.initScene();
+  }
+
+  attachListeners() {
+    this.socket.on('message', text => {
       const el = document.createElement('li');
       el.innerHTML = text;
       el.style.backgroundColor = 'transparent';
@@ -31,10 +41,20 @@ class App {
     btn.addEventListener('click', () => {
       const text = document.querySelector('input').value;
       console.log(text);
-      socket.emit('message', text);
+      this.socket.emit('message', text);
     });
   }
 
+  loadAssets() {
+    // PIXI.Assets
+  }
+
+  initScene() {
+    const graphic = new PIXI.Graphics();
+    graphic.fill(0x335533);
+    graphic.rect(150, 150, 200, 300);
+    this.app.stage.addChild(graphic);
+  }
 }
 
 window.onload = () => new App().init();
