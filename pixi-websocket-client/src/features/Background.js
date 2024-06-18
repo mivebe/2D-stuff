@@ -4,6 +4,7 @@ const TYPES = {
   TILED: 'tiled',
   SINGLE: 'single',
   // TODO maybe add 9 sliced approach later
+  // TODO add animated option
 };
 
 /**
@@ -15,6 +16,7 @@ export default class Background {
     this._sprite = this._createBg();
 
     container.addChild(this._sprite);
+    this.onResize();
   }
 
   /**
@@ -25,8 +27,29 @@ export default class Background {
   }
 
   onResize() {
+    const { innerWidth: iW, innerHeight: iH, outerWidth: oW, outerHeight: oH } = window;
+    const { width, height } = this._sprite;
+
     if (this.type === TYPES.SINGLE) {
-      this._sprite.position.set(window.innerWidth / 2, window.innerHeight / 2)
+      this._sprite.position.set(iW / 2, iH / 2);
+
+      const widthDiff = iW - width;
+      const heightDiff = iH - height;
+      const bothPositive = widthDiff > 0 && heightDiff > 0;
+      const bothNegative = widthDiff < 0 && heightDiff < 0;
+
+      if (bothPositive || bothNegative) {
+        widthDiff > heightDiff ? this._rescaleByWidth() : this._rescaleByHeight();
+      } else if (widthDiff > 0) {
+        this._rescaleByWidth();
+      } else if (heightDiff > 0) {
+        this._rescaleByHeight();
+      }
+    }
+
+    if (this.type === TYPES.TILED) {
+      this._sprite.width = oW;
+      this._sprite.height = oH;
     }
   }
 
@@ -45,12 +68,21 @@ export default class Background {
       const textureAsset = Assets.get('bgSingle');
       bgSprite = new Sprite(textureAsset);
       bgSprite.anchor.set(0.5);
-      bgSprite.position.set(window.innerWidth / 2, window.innerHeight / 2);
     } else {
       throw new TypeError('Background type is not valid!');
     }
 
     bgSprite.label = 'Background';
     return bgSprite;
+  }
+
+  _rescaleByWidth() {
+    this._sprite.width = window.innerWidth;
+    this._sprite.scale.y = this._sprite.scale.x;
+  }
+
+  _rescaleByHeight() {
+    this._sprite.height = window.innerHeight;
+    this._sprite.scale.x = this._sprite.scale.y;
   }
 }

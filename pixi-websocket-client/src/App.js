@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { io } from "socket.io-client";
 import assetMap from './assetMap.json';
 import Background from './features/Background';
-import ProgressBar from './features/ProgressBar';
 import CircularProgressBar from './features/CircularProgressBar';
 import LoadingScreen from './features/LoadingScreen';
 
@@ -81,6 +80,7 @@ class App {
 }
 
 window.onload = () => new App().init();
+
 screen.orientation.addEventListener("change", (event) => {
   const type = event.target.type;
   const angle = event.target.angle;

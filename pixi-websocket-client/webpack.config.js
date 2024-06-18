@@ -3,7 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/App.js',
   devtool: 'source-map',
   output: {
     filename: 'app.js',
@@ -26,6 +26,7 @@ module.exports = {
   },
   devServer: {
     open: true,
+    hot: true,
   },
   mode: 'development',
   plugins: [
