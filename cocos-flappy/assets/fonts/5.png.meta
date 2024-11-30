@@ -1,11 +1,11 @@
 {
-  "ver": "1.0.27",
+  "ver": "1.0.22",
   "importer": "image",
   "imported": true,
   "uuid": "533d214e-e85f-4640-bc6d-907e561a9000",
   "files": [
-    ".json",
-    ".png"
+    ".png",
+    ".json"
   ],
   "subMetas": {
     "6c48a": {
@@ -26,10 +26,8 @@
         "anisotropy": 0
       },
       "ver": "1.0.22",
-      "imported": true,
-      "files": [
-        ".json"
-      ],
+      "imported": false,
+      "files": [],
       "subMetas": {}
     },
     "f9941": {
@@ -118,10 +116,8 @@
         "atlasUuid": ""
       },
       "ver": "1.0.12",
-      "imported": true,
-      "files": [
-        ".json"
-      ],
+      "imported": false,
+      "files": [],
       "subMetas": {}
     }
   },
@@ -129,6 +125,6 @@
     "type": "sprite-frame",
     "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "533d214e-e85f-4640-bc6d-907e561a9000@6c48a"
+    "redirect": "533d214e-e85f-4640-bc6d-907e561a9000@f9941"
   }
 }
