@@ -4,10 +4,10 @@ const { ccclass, property } = _decorator;
 @ccclass('Character')
 export class Character extends Component {
   @property({ type: CCFloat })
-  public jumpHeight: number;
+  public jumpHeight: number = 200;
 
   @property({ type: CCFloat })
-  public jumpDuration: number;
+  public jumpDuration: number = 0.3;
 
   public birdAnimation: Animation;
   public birdLocation: Vec3;
