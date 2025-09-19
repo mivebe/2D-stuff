@@ -12,7 +12,6 @@ class App {
       resizeTo: window,
       preference: 'webgl',
     });
-
     
     document.body.appendChild(app.canvas);
 
@@ -28,10 +27,10 @@ class App {
           uPulse: { value: 0.8, type: 'f32' },
           uColor: { value: [1., 1., 1.], type: 'vec3<f32>' },
           uFuzz: { value: 1.0, type: 'f32' },
-          uScale: { value: 1.0, type: 'f32' }, // INFO: this is reversed
+          uScale: { value: 1.0, type: 'f32' }, 
           uGlow: { value: .7, type: 'f32' },
           uClearCenter: { value: 0.65, type: 'f32' },
-          uClearRadius: { value: 0.50, type: 'f32' }, // INFO: set value to 0.44 to clear center
+          uClearRadius: { value: 0.50, type: 'f32' },
           uCenterColor: { value: [0.0, 0.3, 0.5, .1], type: 'vec4<f32>' },
           uWaveDensity: { value: 1, type: 'i32' },
           uWaveTexture: { value: 1.3, type: 'f32' },
@@ -39,7 +38,6 @@ class App {
       },
     });
 
-    
     const quadGeometry = new Geometry({
       attributes: {
         aPosition: new Float32Array([-1, -1, 1, -1, 1, 1, -1, 1]),
@@ -68,81 +66,70 @@ class App {
       
       const audioMotion = new AudioMotionAnalyzer(null, {
           source: soundNode,
-          useCanvas: false, // Prevents rendering to a canvas
+          useCanvas: false,
           fftSize: 2048,
       });
-
       
       sound.play();
      
-      const PUMP_FACTOR = 5.0;
-
+      const PUMP_FACTOR = 7.0;
+      
       let smoothedVolume = 0;
       let smoothedTrebleVolume = 0;
       let pulseStrength = 0;
       let pulseStrengthTreble = 0;
 
+      const SMOOTHING_FACTOR = 0.05;
+      const DECAY_FACTOR = 0.98;
+
       app.ticker.add(() => {
           const uniforms = shader.resources.shaderToyUniforms.uniforms;
           const averageVolume = audioMotion.getEnergy(30,50);
-
           const averageTrebleVolume = audioMotion.getEnergy(1500, 5000);
 
-
           const volumeBaseLine = 0.8;
-          const SMOOTHING_FACTOR = 0.3;
-          const DECAY_FACTOR = 0.98;
-
+          
           let normalizedVolume = volumeBaseLine;
-
           if (averageVolume > volumeBaseLine) {
-            normalizedVolume = averageVolume
+            normalizedVolume = averageVolume;
           }
 
           smoothedVolume = smoothedVolume * (1 - SMOOTHING_FACTOR) + normalizedVolume * SMOOTHING_FACTOR;
           
-          
           pulseStrength = pulseStrength * DECAY_FACTOR;
-          
-          
           if (smoothedVolume > pulseStrength) {
               pulseStrength = smoothedVolume;
           }
-
 
           const trebleVolumeBaseLine = 0.7;
           let normalizdeTreble = trebleVolumeBaseLine;
           if (averageTrebleVolume > trebleVolumeBaseLine) {
             normalizdeTreble = averageTrebleVolume;
           }
+          
           smoothedTrebleVolume = smoothedTrebleVolume * (1 - SMOOTHING_FACTOR) + normalizdeTreble * SMOOTHING_FACTOR;
+          
           pulseStrengthTreble = pulseStrengthTreble * DECAY_FACTOR;
           if (smoothedTrebleVolume > pulseStrengthTreble) {
               pulseStrengthTreble = smoothedTrebleVolume;
           }
 
           uniforms.uTime += app.ticker.elapsedMS / 1000;
-          uniforms.uPulse = -pulseStrength * PUMP_FACTOR * 0.75 + volumeBaseLine * PUMP_FACTOR;
-          uniforms.uFuzz = pulseStrength * 4.5 - volumeBaseLine * 3.5;
-          uniforms.uWaveTexture = pulseStrength * 5.0 - volumeBaseLine * 4.0;
-          uniforms.uGlow = pulseStrengthTreble * 5.0 - trebleVolumeBaseLine * 3.9;
+          uniforms.uPulse = - pulseStrength * PUMP_FACTOR * 0.9 + volumeBaseLine * PUMP_FACTOR;
+          uniforms.uFuzz = pulseStrengthTreble * 2.5 - trebleVolumeBaseLine * 1.0;
+          uniforms.uWaveTexture = pulseStrength * 2.0 - volumeBaseLine * 1.0;
+          uniforms.uGlow = pulseStrengthTreble * 2.0 - trebleVolumeBaseLine * 1.0;
+          
         });
 
       document.body.removeEventListener('click', startAudio);
     };
 
     document.body.addEventListener('click', startAudio);
-
     
     app.ticker.add(() => {
       const uniforms = shader.resources.shaderToyUniforms.uniforms;
-
       uniforms.uTime += app.ticker.elapsedMS / 1000;
-      
-      // TODO: if changing the color of blob, change of radial fill as well
-      // TODO: fix the color change (vec3 works, but vec4 NOT)
-      // const red = Math.abs(0.1 * Math.sin(uniforms.uTime));
-      // uniforms.uColor = [red, 1.0 - red, 0.5];
     });
 
     app.renderer.on('resize', (width, height) => {
