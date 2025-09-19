@@ -23,7 +23,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(frag|txt)$/i,
+        test: /\.(frag|txt|vert)$/i,
         use: 'raw-loader',
       },
     ],

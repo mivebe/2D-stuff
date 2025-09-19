@@ -1,91 +1,156 @@
-import * as PIXI from 'pixi.js';
+import { Application, Geometry, Mesh, Shader } from 'pixi.js';
 import '../styles/index.css';
-import smokeCode from './shaders/smoke.frag';
-import lightCode from './shaders/light.frag';
-import snlCode from './shaders/smoke-n-light.frag';
+import sunCode from './shaders/sun.frag';
+import sunVert from './shaders/sun.vert';
+import { Howl } from 'howler';
+import AudioMotionAnalyzer from 'audiomotion-analyzer';
 
 class App {
   async init() {
-    const canvas = document.getElementById('main')
-
-    const app = new PIXI.Application({
+    const app = new Application();
+    await app.init({
       resizeTo: window,
-      view: canvas,
-      antialias: true,
-      background: '#1099bb',
-      backgroundAlpha: 0.2,
-    })
+      preference: 'webgl',
+    });
 
-    const { stage, renderer } = app;
-    const { innerWidth: width, innerHeight: height } = window;
+    
+    document.body.appendChild(app.canvas);
 
-    window.addEventListener('pointermove', e => snlUniforms.mouse = [e.x, e.y])
+    const shader = Shader.from({
+      gl: {
+        vertex: sunVert,
+        fragment: sunCode,
+      },
+      resources: {
+        shaderToyUniforms: {
+          uResolution: { value: [app.screen.width, app.screen.height, 1], type: 'vec3<f32>' },
+          uTime: { value: 0, type: 'f32' },
+          uPulse: { value: 0.8, type: 'f32' },
+          uColor: { value: [1., 1., 1.], type: 'vec3<f32>' },
+          uFuzz: { value: 1.0, type: 'f32' },
+          uScale: { value: 1.0, type: 'f32' }, // INFO: this is reversed
+          uGlow: { value: .7, type: 'f32' },
+          uClearCenter: { value: 0.65, type: 'f32' },
+          uClearRadius: { value: 0.50, type: 'f32' }, // INFO: set value to 0.44 to clear center
+          uCenterColor: { value: [0.0, 0.3, 0.5, .1], type: 'vec4<f32>' },
+          uWaveDensity: { value: 1, type: 'i32' },
+          uWaveTexture: { value: 1.3, type: 'f32' },
+        },
+      },
+    });
 
-    const smokeUniforms = {
-      res: [width, height],
-      time: 0.0,
-      alpha: 1.0,
-      speed: [0.7, 0.4],
-      shift: 1.6,
-      clusters: 8.0,
-      density: 1.0,
-    }
+    
+    const quadGeometry = new Geometry({
+      attributes: {
+        aPosition: new Float32Array([-1, -1, 1, -1, 1, 1, -1, 1]),
+        aUV: new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]),
+      },
+      indexBuffer: new Uint32Array([0, 1, 2, 0, 2, 3]),
+    });
 
-    const lightUniforms = {
-      res: [width, height],
-      mouse: [0.0, 0.0],
-      time: 0.0,
-    }
+    const quad = new Mesh({
+      geometry: quadGeometry,
+      shader,
+    });
 
-    const snlUniforms ={
-      res: [width, height],
-      mouse: [0.0, 0.0],
-      time: 0.0,
-      alpha: 1.0,
-      speed: [0.7, 0.4],
-      shift: 1.6,
-      clusters: 8.0,
-      density: 1.0,
-    }
+    quad.width = app.screen.width;
+    quad.height = app.screen.height;
+    app.stage.addChild(quad);
 
-    const colorMatrix = new PIXI.filters.ColorMatrixFilter();
-    const smokeShader = new PIXI.Filter('', smokeCode, smokeUniforms);
-    const lightShader = new PIXI.Filter('', lightCode, lightUniforms);
-    const snlShader = new PIXI.Filter('', snlCode, snlUniforms);
-    smokeShader.autoFit = false;
-    lightShader.autoFit = false;
-    snlShader.autoFit = false;
+    const startAudio = () => {
+      const sound = new Howl({
+          src: ['../assets/sounds/music_level_2.mp4'],
+          html5: true,
+          loop: true,
+      });
 
-    const bg = PIXI.Sprite.from('../assets/images/background.jpg');
-    bg.width = width;
-    bg.height = height;
-    // bg.filters = [smokeShader, lightShader,];
-    bg.filters = [snlShader];
-    colorMatrix.contrast(2);
-    stage.addChild(bg);
+      const soundNode = sound._sounds[0]._node;      
+      
+      const audioMotion = new AudioMotionAnalyzer(null, {
+          source: soundNode,
+          useCanvas: false, // Prevents rendering to a canvas
+          fftSize: 2048,
+      });
 
-    const logo = PIXI.Sprite.from('../assets/images/orichalcos.png');
-    logo.x = width / 2;
-    logo.y = height / 2;
-    logo.anchor.set(0.5);
-    logo.blendMode = PIXI.BLEND_MODES.ADD;
-    stage.addChild(logo);
+      
+      sound.play();
+     
+      const PUMP_FACTOR = 5.0;
 
-    let delta = 0
+      let smoothedVolume = 0;
+      let smoothedTrebleVolume = 0;
+      let pulseStrength = 0;
+      let pulseStrengthTreble = 0;
 
-    function tick() {
-      smokeShader.uniforms.time = delta;
-      lightShader.uniforms.time = delta;
-      snlShader.uniforms.time = delta;
-      delta += 0.01;
+      app.ticker.add(() => {
+          const uniforms = shader.resources.shaderToyUniforms.uniforms;
+          const averageVolume = audioMotion.getEnergy(30,50);
 
-      renderer.render(stage);
-      requestAnimationFrame(tick);
-    }
+          const averageTrebleVolume = audioMotion.getEnergy(1500, 5000);
 
-    tick()
+
+          const volumeBaseLine = 0.8;
+          const SMOOTHING_FACTOR = 0.3;
+          const DECAY_FACTOR = 0.98;
+
+          let normalizedVolume = volumeBaseLine;
+
+          if (averageVolume > volumeBaseLine) {
+            normalizedVolume = averageVolume
+          }
+
+          smoothedVolume = smoothedVolume * (1 - SMOOTHING_FACTOR) + normalizedVolume * SMOOTHING_FACTOR;
+          
+          
+          pulseStrength = pulseStrength * DECAY_FACTOR;
+          
+          
+          if (smoothedVolume > pulseStrength) {
+              pulseStrength = smoothedVolume;
+          }
+
+
+          const trebleVolumeBaseLine = 0.7;
+          let normalizdeTreble = trebleVolumeBaseLine;
+          if (averageTrebleVolume > trebleVolumeBaseLine) {
+            normalizdeTreble = averageTrebleVolume;
+          }
+          smoothedTrebleVolume = smoothedTrebleVolume * (1 - SMOOTHING_FACTOR) + normalizdeTreble * SMOOTHING_FACTOR;
+          pulseStrengthTreble = pulseStrengthTreble * DECAY_FACTOR;
+          if (smoothedTrebleVolume > pulseStrengthTreble) {
+              pulseStrengthTreble = smoothedTrebleVolume;
+          }
+
+          uniforms.uTime += app.ticker.elapsedMS / 1000;
+          uniforms.uPulse = -pulseStrength * PUMP_FACTOR * 0.75 + volumeBaseLine * PUMP_FACTOR;
+          uniforms.uFuzz = pulseStrength * 4.5 - volumeBaseLine * 3.5;
+          uniforms.uWaveTexture = pulseStrength * 5.0 - volumeBaseLine * 4.0;
+          uniforms.uGlow = pulseStrengthTreble * 5.0 - trebleVolumeBaseLine * 3.9;
+        });
+
+      document.body.removeEventListener('click', startAudio);
+    };
+
+    document.body.addEventListener('click', startAudio);
+
+    
+    app.ticker.add(() => {
+      const uniforms = shader.resources.shaderToyUniforms.uniforms;
+
+      uniforms.uTime += app.ticker.elapsedMS / 1000;
+      
+      // TODO: if changing the color of blob, change of radial fill as well
+      // TODO: fix the color change (vec3 works, but vec4 NOT)
+      // const red = Math.abs(0.1 * Math.sin(uniforms.uTime));
+      // uniforms.uColor = [red, 1.0 - red, 0.5];
+    });
+
+    app.renderer.on('resize', (width, height) => {
+      shader.resources.shaderToyUniforms.uniforms.uResolution = [width, height, 1];
+      quad.width = width;
+      quad.height = height;
+    });
   }
-
 }
 
 window.onload = () => new App().init();

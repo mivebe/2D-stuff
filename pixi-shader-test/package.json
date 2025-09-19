@@ -19,8 +19,10 @@
     "webpack-dev-server": "4.11.1"
   },
   "dependencies": {
+    "audiomotion-analyzer": "^4.5.1",
     "gsap": "^3.11.4",
-    "pixi.js": "6.0.4"
+    "howler": "^2.2.4",
+    "pixi.js": "^8.13.2"
   },
   "keywords": [
     "pixi",
