@@ -28,9 +28,9 @@ class App {
           uColor: { value: [1., 1., 1.], type: 'vec3<f32>' },
           uFuzz: { value: 1.0, type: 'f32' },
           uScale: { value: 1.0, type: 'f32' }, 
-          uGlow: { value: .9, type: 'f32' },
-          uClearCenter: { value: 1., type: 'f32' },
-          uClearRadius: { value: 0.35, type: 'f32' },
+          uGlow: { value: 1.5, type: 'f32' },
+          uClearCenter: { value: .8, type: 'f32' },
+          uClearRadius: { value: 0.45, type: 'f32' },
           uCenterColor: { value: [.0, .0, .0, .1], type: 'vec4<f32>' },
           uWaveDensity: { value: 1, type: 'i32' },
           uWaveTexture: { value: 1.3, type: 'f32' },
@@ -118,7 +118,7 @@ class App {
           uniforms.uPulse = - pulseStrength * PUMP_FACTOR * 0.9 + volumeBaseLine * PUMP_FACTOR;
           uniforms.uFuzz = pulseStrengthTreble * 2.5 - trebleVolumeBaseLine * 1.0;
           uniforms.uWaveTexture = pulseStrength * 2.0 - volumeBaseLine * 1.0;
-          uniforms.uGlow = pulseStrengthTreble * 2.0 - trebleVolumeBaseLine * 1.0;
+          uniforms.uGlow = pulseStrengthTreble * 3.0 - trebleVolumeBaseLine * 1.0;
           
         });
 
@@ -130,6 +130,13 @@ class App {
     app.ticker.add(() => {
       const uniforms = shader.resources.shaderToyUniforms.uniforms;
       uniforms.uTime += app.ticker.elapsedMS / 1000;
+      
+      // const colorSpeed = 30.2;
+      // uniforms.uColor = [
+      //   (Math.sin(uniforms.uTime / 1000 * colorSpeed) + 1.0) / 2.0,
+      //   (Math.sin(uniforms.uTime / 1000 * colorSpeed + 2.0) + 1.0) / 2.0,
+      //   (Math.sin(uniforms.uTime / 1000 * colorSpeed + 4.0) + 1.0) / 2.0,
+      // ]
     });
 
     app.renderer.on('resize', (width, height) => {
