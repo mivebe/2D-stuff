@@ -36,7 +36,7 @@ void main() {
     // Use vUV for the position calculation
     vec2 u = vUV * r.xy;
 
-    for (float i = 0.0; i < 100.0; i++) {
+    for (int i = 0; i < 25; i++) {
         d += s = .02 + abs(s) * 0.4;
         o += vec4(1, 2.7 - cos(.5) * 1.6, 1.8, 0.3) / s;
         
@@ -56,11 +56,7 @@ void main() {
     float dist = length(u - r.xy / 2.0) / r.y;
     
     // Use smoothstep to create a smooth falloff
-    float blendFactor = smoothstep(uClearRadius - uClearCenter, uClearRadius, dist);
-    
-    // Set the center color (e.g., black)
-    vec4 centerColor = vec4(uCenterColor);
-    
-    // Blend the final color with the center color
+    float blendFactor = (dist - (uClearRadius - uClearCenter)) / uClearCenter;
+    blendFactor = clamp(blendFactor, 0.0, 1.0);
     FragColor = mix(vec4(uCenterColor), finalColor, blendFactor);
 }
