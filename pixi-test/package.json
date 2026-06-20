@@ -1,16 +1,11 @@
 {
-  "name": "pixi-websocket-client",
-  "version": "0.0.1",
-  "description": "Pixi.js websocket client template with asset manifest and loading screens",
-  "main": "src/App.js",
+  "name": "pixi-test",
+  "version": "1.0.0",
+  "description": "Pixi.js sandbox: sprites, pointer/keyboard controls, sounds",
+  "main": "src/index.js",
   "scripts": {
     "build": "webpack",
     "start": "webpack serve"
-  },
-  "dependencies": {
-    "gsap": "^3.12.5",
-    "pixi.js": "^8.6.6",
-    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
@@ -21,11 +16,12 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   },
+  "dependencies": {
+    "pixi.js": "^7.4.3"
+  },
   "keywords": [
     "pixi",
-    "websocket",
-    "socket.io",
-    "template"
+    "sandbox"
   ],
   "author": "mivebe",
   "license": "MIT"

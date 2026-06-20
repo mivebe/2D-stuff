@@ -10,7 +10,7 @@
         },
         {
           "alias": "bgTile",
-          "src": "../assets/loading/bgTile.png",
+          "src": "./assets/loading/bgTile.png",
           "loader": "loadTextures"
         }
       ]
@@ -20,12 +20,12 @@
       "assets": [
         {
           "alias": "character",
-          "src": "../assets/main/neoninja.jpg",
+          "src": "./assets/main/neoninja.jpg",
           "loader": "loadTextures"
         },
         {
           "alias": "asd",
-          "src": "../assets/main/gow210.png",
+          "src": "./assets/main/gow210.png",
           "loader": "loadTextures"
         }
       ]

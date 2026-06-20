@@ -1,4 +1,5 @@
-import *  as PIXI from './pixi.mjs'
+import * as PIXI from 'pixi.js'
+import '../styles/index.css';
 import { handleKeyboardMovement } from './controls/keyboardInput.js';
 import { move } from './controls/movement.js';
 import { showProgress } from './utils.js';

@@ -16,10 +16,6 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
-      {
-        test: /\.(frag|vert|glsl)$/i,
-        type: 'asset/source',
-      },
     ],
   },
   devServer: {
@@ -28,10 +24,12 @@ module.exports = {
   },
   mode: 'development',
   plugins: [
-    new HtmlWebpackPlugin({ template: './index.html', favicon: './assets/images/favicon.ico' }),
+    new HtmlWebpackPlugin({ template: './index.html' }),
+    // sprites and sounds are referenced by runtime string paths, copy them as-is
     new CopyPlugin({
       patterns: [
-        { from: './assets/', to: 'assets/' },
+        { from: './images/', to: 'images/' },
+        { from: './sounds/', to: 'sounds/' },
       ],
     }),
   ],

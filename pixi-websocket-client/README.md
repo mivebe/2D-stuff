@@ -1,16 +1,21 @@
-# Pixi Topdown Shooter
+# Pixi Websocket Client
+
+A Pixi.js (v8) websocket client template: socket.io messaging, an asset manifest
+with bundled loading, a circular progress bar, and a responsive background.
 
 ### Install
-```javascript
+```
 npm install
 ```
 
 ### Start
-```javascript
+```
 npm run start
 ```
 
 ### Build
-```javascript
+```
 npm run build
 ```
+
+Expects a socket.io server on `http://localhost:3001`.

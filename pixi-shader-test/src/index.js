@@ -48,7 +48,6 @@ class App {
       density: 1.0,
     }
 
-    const colorMatrix = new PIXI.filters.ColorMatrixFilter();
     const smokeShader = new PIXI.Filter('', smokeCode, smokeUniforms);
     const lightShader = new PIXI.Filter('', lightCode, lightUniforms);
     const snlShader = new PIXI.Filter('', snlCode, snlUniforms);
@@ -56,15 +55,14 @@ class App {
     lightShader.autoFit = false;
     snlShader.autoFit = false;
 
-    const bg = PIXI.Sprite.from('../assets/images/background.jpg');
+    const bg = PIXI.Sprite.from('./assets/images/background.jpg');
     bg.width = width;
     bg.height = height;
     // bg.filters = [smokeShader, lightShader,];
     bg.filters = [snlShader];
-    colorMatrix.contrast(2);
     stage.addChild(bg);
 
-    const logo = PIXI.Sprite.from('../assets/images/orichalcos.png');
+    const logo = PIXI.Sprite.from('./assets/images/orichalcos.png');
     logo.x = width / 2;
     logo.y = height / 2;
     logo.anchor.set(0.5);
