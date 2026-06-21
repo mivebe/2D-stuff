@@ -1,22 +1,40 @@
 # 2D-stuff
 
-A collection of 2D graphics experiments built with Pixi.js and raw WebGL2.
-The [`dashboard/`](dashboard/) folder lists every project and embeds each one as
-an isolated iframe, mirroring the approach in
-[3D-stuff](https://github.com/mivebe/3D-stuff).
+A collection of 2D graphics experiments spanning Pixi.js sandboxes, GLSL shader
+filters, and raw WebGL2 rendering, gathered under a unified dashboard. Mirrors the
+dashboard approach from [3D-stuff](https://github.com/mivebe/3D-stuff).
+
+## Dashboard
+
+The [dashboard](dashboard/) lists every project and embeds each one as an isolated
+iframe. Build and run it locally:
+
+```
+cd dashboard
+npm install
+npm run build:all   # build every project + the dashboard shell
+npm run dev          # work on the dashboard shell
+```
 
 ## Projects
 
-| Project | Stack | What it is |
+### Pixi.js
+
+| Project | Description | Tech |
 |---|---|---|
-| [pixi-websocket-client](pixi-websocket-client/) | Pixi.js v8, socket.io | Websocket client template: asset manifest, bundled loading, circular progress, responsive background |
-| [pixi-shader-test](pixi-shader-test/) | Pixi.js v7 | GLSL fragment shaders applied as sprite filters (smoke, light), driven by time and pointer |
-| [pixi-test](pixi-test/) | Pixi.js v7 | Sandbox: sprite movement, pointer/keyboard controls, sword, bullets with collision, sounds |
-| [webgl-shaders](webgl-shaders/) | raw WebGL2 | Pickable gallery of fragment shaders rendered on a fullscreen quad |
+| [Pixi Websocket Client](pixi-websocket-client/) | Websocket template: socket.io messaging, asset manifest, bundled loading, circular progress loader, responsive background | Pixi.js v8, socket.io, webpack |
+| [Pixi Shader Filters](pixi-shader-test/) | GLSL fragment shaders (smoke, light) applied as sprite filters over a background, animated by time and pointer | Pixi.js v7, GLSL, webpack |
+| [Pixi Sandbox](pixi-test/) | Sprite rendering with pointer and keyboard movement, a swingable sword, bullets with collision and sound effects | Pixi.js v7, webpack |
 
-## Shared scaffolding
+### WebGL
 
-Every project is a self-contained npm package that builds with webpack 5 to a
+| Project | Description | Tech |
+|---|---|---|
+| [WebGL2 Shader Gallery](webgl-shaders/) | Pickable gallery of raw WebGL2 fragment shaders rendered on a fullscreen quad, driven by resolution, time and mouse uniforms | raw WebGL2, GLSL, webpack |
+
+## Architecture
+
+Each project is a self-contained npm package that builds with webpack 5 to a
 static `dist/`:
 
 ```
@@ -30,16 +48,12 @@ for CSS, `asset/source` for `.frag`/`.vert`/`.glsl`, `copy-webpack-plugin` for
 runtime assets). Pixi.js is on v8 where the code targets it and v7 elsewhere; the
 v8 migration of the v7 projects is the remaining unification step.
 
-## Dashboard
+The dashboard is a Vite + React shell. Project metadata lives in
+[`dashboard/src/projects.js`](dashboard/src/projects.js) as the single source of
+truth. Each project builds independently into `dashboard/public/projects/<id>/`
+and is embedded by id. See [`dashboard/README.md`](dashboard/README.md) for the
+full set of scripts.
 
-```
-cd dashboard
-npm install
-npm run build:all     # build every project + the dashboard shell
-npm run thumbnails    # screenshot each built project for the cards (needs Chrome)
-npm run dev           # work on the dashboard shell
-```
+## Author
 
-Project metadata lives in [`dashboard/src/projects.js`](dashboard/src/projects.js).
-Each project builds into `dashboard/public/projects/<id>/` and is embedded by id.
-See [`dashboard/README.md`](dashboard/README.md) for details.
+[@mivebe](https://github.com/mivebe)
