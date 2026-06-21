@@ -24,7 +24,7 @@ npm run dev          # work on the dashboard shell
 |---|---|---|
 | [Pixi Websocket Client](pixi-websocket-client/) | Websocket template: socket.io messaging, asset manifest, bundled loading, circular progress loader, responsive background | Pixi.js v8, socket.io, webpack |
 | [Pixi Shader Filters](pixi-shader-test/) | GLSL fragment shaders (smoke, light) applied as sprite filters over a background, animated by time and pointer | Pixi.js v7, GLSL, webpack |
-| [Pixi Sandbox](pixi-test/) | Sprite rendering with pointer and keyboard movement, a swingable sword, bullets with collision and sound effects | Pixi.js v7, webpack |
+| [Arena Survivor](arena-survivor/) | Top-down arena survivor: WASD/gamepad movement, mouse-aimed gun and heavy melee sword, four enemy archetypes, XP-driven level-up upgrades over escalating waves | Pixi.js v8, TypeScript, Vite |
 
 ### WebGL
 

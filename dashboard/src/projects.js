@@ -20,12 +20,13 @@ export const projects = [
     tool: 'webpack',
   },
   {
-    id: 'pixi-test',
-    title: 'Pixi Sandbox',
-    blurb: 'Sprite rendering with pointer and keyboard movement, a swingable sword, bullets with collision and sound effects.',
+    id: 'arena-survivor',
+    title: 'Arena Survivor',
+    blurb: 'Top-down arena survivor: WASD/gamepad movement, mouse-aimed gun and heavy melee sword, four enemy archetypes, and XP-driven level-up upgrades over escalating waves.',
     category: 'Pixi',
-    source: '../pixi-test',
-    tool: 'webpack',
+    source: '../arena-survivor',
+    tool: 'vite',
+    thumbWait: 9000,
   },
   {
     id: 'webgl-shaders',
@@ -34,6 +35,7 @@ export const projects = [
     category: 'WebGL',
     source: '../webgl-shaders',
     tool: 'webpack',
+    thumbQuery: '?shader=smoke',
   },
 ]
 

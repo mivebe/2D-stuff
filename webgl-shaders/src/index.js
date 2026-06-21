@@ -140,5 +140,9 @@ SHADERS.forEach((entry, i) => {
 });
 picker.addEventListener('change', () => selectShader(SHADERS[Number(picker.value)]));
 
-selectShader(SHADERS[0]);
+// optional ?shader=<name> deep link, falls back to the first entry
+const requested = new URLSearchParams(location.search).get('shader');
+const initial = Math.max(0, SHADERS.findIndex(s => s.name === requested));
+picker.value = String(initial);
+selectShader(SHADERS[initial]);
 requestAnimationFrame(render);

@@ -81,7 +81,7 @@ for (const project of selected) {
   const page = await browser.newPage()
   await page.setViewport({ width: 800, height: 500 })
   try {
-    await page.goto(`http://localhost:${port}/projects/${project.id}/index.html`, {
+    await page.goto(`http://localhost:${port}/projects/${project.id}/index.html${project.thumbQuery ?? ''}`, {
       waitUntil: 'load',
       timeout: 30000,
     })
