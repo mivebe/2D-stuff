@@ -12,13 +12,14 @@ float circeShape(vec2 position, float radius) {
 }
 
 void main() {
-    vec2 coord = gl_FragCoord.xy / u_resolution.x;
+    vec2 coord = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.x + 0.5;
     vec3 color = vec3(0.0);
     
-    vec2 translate = vec2(sin(u_time / 10.0), cos(u_time));
-    coord += translate * 0.5;
+    // small orbit so the circle stays on screen, offset a bit to the right
+    vec2 translate = vec2(sin(u_time), cos(u_time)) * 0.12;
+    coord -= vec2(0.15, 0.0) + translate;
     
-    color += vec3(circeShape(coord, 0.3));
+    color += vec3(circeShape(coord, 0.15));
     
     outColor = vec4(color, 1.0);
 }

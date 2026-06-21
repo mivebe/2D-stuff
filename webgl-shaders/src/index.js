@@ -3,8 +3,6 @@ import vertSource from '../shaders/twoTriangles.vert';
 
 import circle from '../shaders/circle.frag';
 import light from '../shaders/light.frag';
-import movement from '../shaders/movement.frag';
-import noIdea from '../shaders/no_idea.frag';
 import polygon from '../shaders/polygon.frag';
 import rectangle from '../shaders/rectangle.frag';
 import rotation from '../shaders/rotation.frag';
@@ -21,10 +19,8 @@ const SHADERS = [
   { name: 'rotation', source: rotation },
   { name: 'scaling', source: scaling },
   { name: 'sineCosine', source: sineCosine },
-  { name: 'movement', source: movement },
   { name: 'light', source: light },
   { name: 'smoke', source: smoke },
-  { name: 'no_idea', source: noIdea },
 ];
 
 const canvas = document.querySelector('canvas');

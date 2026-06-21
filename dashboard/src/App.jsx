@@ -44,7 +44,7 @@ function Home() {
           <Link key={project.id} to={`/view/${project.id}`} style={styles.card}>
             <div style={styles.thumbWrap}>
               <img
-                src={`thumbnails/${project.id}.jpg`}
+                src={`${import.meta.env.BASE_URL}thumbnails/${project.id}.jpg`}
                 alt={project.title}
                 style={styles.thumb}
                 loading="lazy"
@@ -79,7 +79,7 @@ function View() {
       </Link>
       <iframe
         title={project.title}
-        src={`projects/${project.id}/index.html`}
+        src={`${import.meta.env.BASE_URL}projects/${project.id}/index.html`}
         style={styles.iframe}
         allow="fullscreen; autoplay; xr-spatial-tracking"
         allowFullScreen
@@ -145,7 +145,7 @@ const styles = {
   viewer: { position: 'fixed', inset: 0 },
   back: {
     position: 'fixed',
-    top: 14,
+    bottom: 14,
     left: 14,
     zIndex: 10,
     background: 'rgba(20,20,28,0.8)',

@@ -14,7 +14,8 @@ void main() {
     float asd = max(u_resolution.x, u_resolution.y) - min(u_resolution.x, u_resolution.y);
     
     coord.x -= u_mouse.x / u_resolution.x;
-    coord.y -= u_mouse.y / u_resolution.y;
+    // clientY is top-origin, gl_FragCoord is bottom-origin, so flip y
+    coord.y -= 1.0 - u_mouse.y / u_resolution.y;
     
     vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
     

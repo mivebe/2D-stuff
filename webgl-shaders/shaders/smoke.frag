@@ -5,11 +5,6 @@ precision mediump float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-// uniform vec2 resolution;
-// uniform float time;
-// uniform float alpha;
-// uniform float shift;
-// uniform vec2 speed;
 out vec4 outColor;
 
 // RNG based on a number seed.
@@ -36,33 +31,36 @@ float fbm(vec2 n) {
 }
 
 void main() {
-  // some predefined vars that can be omitted if sent to PIXI.AbstractFilter as uniforms.
-  
   float alpha = 1.0;
-  // The color shifting step size.
-  float shift = 1.6;
-  // The color shift speed.
+  // color shift speed for the domain warp
   vec2 speed = vec2(0.7, 0.4);
-  // Defines how many are the clusters of smoke in the display area.
+  // how packed the clusters are in the display area
   float clusters = 8.0;
-  float density = 1.0;
-  
-  // A bunch of colors for pixel shifting
-  const vec3 c1 = vec3(126.0 / 255.0, 0.0 / 255.0, 97.0 / 255.0);
-  const vec3 c2 = vec3(173.0 / 255.0, 0.0 / 255.0, 161.4 / 255.0);
-  const vec3 c3 = vec3(0.2, 0.0, 0.0);
-  const vec3 c4 = vec3(164.0 / 255.0, 1.0 / 255.0, 214.4 / 255.0);
-  const vec3 c5 = vec3(0.1);
-  const vec3 c6 = vec3(0.9);
-  
-  // This is how "packed" the smoke is in the display area.
-  vec2 pixel = gl_FragCoord.xy * clusters / u_resolution.x;
-  
-  // The fbm function takes pixel as its seed (so each pixel looks different) and time (so it shifts over time)
+
+  // toxic green palette: near-black green into acid highlights
+  const vec3 c1 = vec3(0.02, 0.05, 0.01);
+  const vec3 c2 = vec3(0.20, 0.45, 0.05);
+  const vec3 c3 = vec3(0.0, 0.10, 0.0);
+  const vec3 c4 = vec3(0.45, 0.85, 0.10);
+  const vec3 c5 = vec3(0.05);
+  const vec3 c6 = vec3(0.55);
+
+  // centered, aspect-correct coords drive the swirl and the vignette
+  vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.x;
+
+  // slow rotation of the noise domain so the gas churns instead of drifting up
+  float angle = u_time * 0.15;
+  mat2 rot = mat2(cos(angle), - sin(angle), sin(angle), cos(angle));
+  vec2 pixel = (rot * uv + 0.5) * clusters;
+
   float q = fbm(pixel - u_time * 0.1);
   vec2 r = vec2(fbm(pixel + q + u_time * speed.x - pixel.x - pixel.y), fbm(pixel + q - u_time * speed.y));
   vec3 color = mix(c1, c2, fbm(pixel + r)) + mix(c3, c4, r.x) - mix(c5, c6, r.y);
-  float gradient = gl_FragCoord.y / u_resolution.y;
-  outColor = vec4(color * cos(shift * gl_FragCoord.y / u_resolution.y), alpha);
-  outColor.xyz *= density - gradient;
+
+  // gentle breathing density
+  float pulse = 0.85 + 0.15 * sin(u_time * 0.6);
+  // radial vignette, dense center fading to the edges
+  float vignette = smoothstep(0.7, 0.1, length(uv));
+
+  outColor = vec4(color * pulse * vignette, alpha);
 }
